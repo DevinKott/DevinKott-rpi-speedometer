@@ -58,11 +58,14 @@ namespace DevinKott.RPi
                 await MicroSleep(10);
                 gpioController.Write(TriggerPin, PinValue.Low);
 
+                _logger.LogInformation("Watching for low signal...");
                 Stopwatch stopwatch = new();
                 while (gpioController.Read(EchoPin) == PinValue.Low)
                 {
                     stopwatch.Restart();
                 }
+
+                _logger.LogInformation("Low signal stopped, waiting for high signal...");
 
                 while (gpioController.Read(EchoPin) == PinValue.High) {}
                 stopwatch.Stop();
