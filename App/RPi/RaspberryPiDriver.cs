@@ -57,7 +57,18 @@ namespace DevinKott.RPi
                 gpioController.Write(TriggerPin, PinValue.High);
                 await MicroSleep(10);
                 gpioController.Write(TriggerPin, PinValue.Low);
-                
+
+                Stopwatch stopwatch = new();
+                while (gpioController.Read(EchoPin) == PinValue.Low)
+                {
+                    stopwatch.Restart();
+                }
+
+                while (gpioController.Read(EchoPin) == PinValue.High) {}
+                stopwatch.Stop();
+
+                _logger.LogInformation($"{stopwatch.ElapsedMilliseconds} ms, {stopwatch.ElapsedTicks}");
+
                 _logger.LogInformation("Doing stuff...");
                 await Task.Delay(1_000);
             }
